@@ -32,9 +32,12 @@ export default function App() {
       <h1>Tic-Tac-Toe</h1>
       <div className="status">{status}</div>
       <Board squares={squares} onSquareClick={handleSquareClick} />
-      <div className="actions">
-        <button onClick={reset}>Reset</button>
-      </div>
+
+      {winner && (
+        <div className="actions">
+          <button onClick={reset}>Play Again</button>
+        </div>
+      )}
     </div>
   );
 }
