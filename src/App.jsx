@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Board from "./components/Board";
+import { calculateWinner } from "./utils/calculateWinner";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
+
+  const winner = calculateWinner(squares);
+  const status =
+    winner === "draw"
+      ? "It's a draw!"
+      : winner
+      ? `Winner: ${winner}`
+      : `Next player: ${xIsNext ? "X" : "O"}`;
+
+  function handleSquareClick(i) {
+    if (squares[i] || winner) return; // ignore if already filled or game over
+    const next = squares.slice();
+    next[i] = xIsNext ? "X" : "O";
+    setSquares(next);
+    setXIsNext(!xIsNext);
+  }
+
+  function reset() {
+    setSquares(Array(9).fill(null));
+    setXIsNext(true);
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <h1>Tic-Tac-Toe</h1>
+      <div className="status">{status}</div>
+      <Board squares={squares} onSquareClick={handleSquareClick} />
+      <div className="actions">
+        <button onClick={reset}>Reset</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
-
-export default App
